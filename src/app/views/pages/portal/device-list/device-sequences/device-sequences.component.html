@@ -1,0 +1,41 @@
+<div>
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h6>Secuencias</h6>
+    <button class="btn btn-sm btn-success" (click)="addSequence()">+ Secuencia</button>
+  </div>
+
+  <c-accordion>
+    <c-accordion-item #acItem="cAccordionItem" *ngFor="let seq of sequences; let i = index">
+
+      <ng-template cTemplateId="accordionHeaderTemplate">
+
+        <button (click)="acItem.toggleItem()" [collapsed]="!acItem.visible" cAccordionButton>
+          {{seq.name}}
+        </button>
+        <!-- <button cAccordionButton>
+          <div class="d-flex justify-content-between align-items-center w-100 p-2">
+            <input [(ngModel)]="seq.name" class="form-control form-control-sm w-75 me-2"
+              placeholder="Nombre de secuencia" (click)="$event.stopPropagation()" />
+
+            <button class="btn btn-sm btn-danger flex-shrink-0" (click)="removeSequence(i); $event.stopPropagation()">
+              Eliminar
+            </button>
+          </div>
+        </button> -->
+
+      </ng-template>
+
+      <ng-template cTemplateId="accordionBodyTemplate">
+        <div class="accordion-body p-2">
+          <app-device-sequence-steps [steps]="seq.steps" (stepsChange)="seq.steps = $event">
+          </app-device-sequence-steps>
+        </div>
+      </ng-template>
+
+    </c-accordion-item>
+  </c-accordion>
+
+
+
+
+</div>

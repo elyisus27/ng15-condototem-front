@@ -1,0 +1,10 @@
+<c-accordion>
+    <c-accordion-item *ngFor="let seq of sequences; ">
+        <ng-template cTemplate="accordionHeader">
+            {{ seq.name }}
+        </ng-template>
+        <ng-template cTemplate="accordionBody">
+            <app-device-sequence-steps [steps]="seq.steps"></app-device-sequence-steps>
+        </ng-template>
+    </c-accordion-item>
+</c-accordion>

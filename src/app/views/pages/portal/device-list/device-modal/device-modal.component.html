@@ -1,0 +1,39 @@
+<!-- device-modal.component.html -->
+<c-modal size="lg" [visible]="visible" (visibleChange)="handleVisibleChange($event)">
+
+  <c-modal-header>
+    <h5 cModalTitle>{{ device.deviceId ? 'Editar Dispositivo' : 'Agregar Dispositivo' }}</h5>
+    <!-- <button cButtonClose></button> -->
+  </c-modal-header>
+
+  <c-modal-body>
+    <form [formGroup]="deviceForm">
+      <div class="mb-3">
+        <label class="form-label">Nombre del dispositivo</label>
+        <input formControlName="name" class="form-control" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <textarea formControlName="description" class="form-control"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Num Serie</label>
+        <input type="text" formControlName="adbDevice" class="form-control" required>
+      </div>
+    </form>
+
+    <hr>
+
+    <!-- Aquí incluimos el componente de secuencias -->
+    <!-- <app-device-sequences [sequences]="device.sequences"></app-device-sequences> -->
+    <app-device-sequences [sequences]="currentSequences" (sequencesChange)="updateSequences($event)">
+    </app-device-sequences>
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button class="btn btn-secondary" (click)="close.emit()">Cancelar</button>
+    <button class="btn btn-primary" (click)="saveDevice()">Guardar</button>
+  </c-modal-footer>
+</c-modal>

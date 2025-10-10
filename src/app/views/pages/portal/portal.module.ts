@@ -12,43 +12,58 @@ import { BoardUserComponent } from './board-user/board-user.component';
 // Importa AvanzaModule porque contiene SmartDatatableComponent
 import { AvanzaModule } from '../../../avanza/avanza.module'; // <--- ¡IMPORTANTE!
 
-// Importa los módulos de Angular Material que tus componentes necesitan
-// Basado en tus errores, necesitas al menos estos:
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-// Asegúrate de importar cualquier otro módulo de Material que uses (ej. MatButtonModule, MatIconModule etc.)
+
+
 // Revisa tus archivos HTML de HousesListComponent y CfeListComponent para ver cuáles más podrías necesitar.
 
 import { ROUTES } from './portal.routing'; // Tus rutas de portal
-import { SpinnerModule } from '@coreui/angular';
+import { SpinnerModule, ModalModule, AccordionModule, ButtonCloseDirective, ButtonDirective, ModalBodyComponent, ModalComponent, ModalFooterComponent, ModalHeaderComponent, ModalTitleDirective } from '@coreui/angular';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { DeviceModalComponent } from './device-list/device-modal/device-modal.component';
+import { DeviceSequencesComponent } from './device-list/device-sequences/device-sequences.component';
+import { DeviceSequenceStepsComponent } from './device-list/device-sequence-steps/device-sequence-steps.component';
+import { AccordionComponent, AccordionItemComponent, TemplateIdDirective, AccordionButtonDirective } from '@coreui/angular';
 
 @NgModule({
   declarations: [
     BoardAdminComponent,
     BoardModeratorComponent,
     BoardUserComponent,
+    
 
 
     DeviceListComponent,
+        
+        DeviceModalComponent,
+        DeviceSequencesComponent,
+        DeviceSequenceStepsComponent,
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild(ROUTES),
 
     // --- Módulos que tus componentes movidos necesitan ---
     AvanzaModule, // Provee SmartDatatableComponent (asumiendo que está exportado de AvanzaModule)
 
-    // Módulos de Angular Material
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    // Añade aquí cualquier otro módulo de Material necesario
-     SpinnerModule,
+
+
+    SpinnerModule,
+    ModalModule,
+    AccordionModule,
+    ModalComponent,
+    ModalHeaderComponent,
+    ModalTitleDirective,
+    ButtonCloseDirective,
+    ModalBodyComponent,
+    ModalFooterComponent,
+    ButtonDirective,
+    AccordionComponent,
+    AccordionItemComponent,
+    TemplateIdDirective,
+    AccordionButtonDirective
   ],
   // No necesitas exportar estos componentes si solo se usan dentro del PortalModule,
   // pero si algún otro módulo fuera de PortalModule los necesitara, se exportarían aquí.
