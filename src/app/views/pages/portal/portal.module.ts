@@ -17,27 +17,26 @@ import { AvanzaModule } from '../../../avanza/avanza.module'; // <--- ¡IMPORTAN
 // Revisa tus archivos HTML de HousesListComponent y CfeListComponent para ver cuáles más podrías necesitar.
 
 import { ROUTES } from './portal.routing'; // Tus rutas de portal
-import { SpinnerModule, ModalModule, AccordionModule, ButtonCloseDirective, ButtonDirective, ModalBodyComponent, ModalComponent, ModalFooterComponent, ModalHeaderComponent, ModalTitleDirective } from '@coreui/angular';
+import { SpinnerModule, ModalModule, AccordionModule, ButtonCloseDirective, ButtonDirective, ModalBodyComponent, ModalComponent, ModalFooterComponent, ModalHeaderComponent, ModalTitleDirective, AlertModule, AvatarModule, BadgeModule, BreadcrumbModule, ButtonGroupModule, ButtonModule, CardModule, DropdownModule, FooterModule, FormModule, GridModule, HeaderModule, ListGroupModule, NavModule, ProgressModule, SidebarModule, TabsModule, ToastModule, UtilitiesModule, AccordionComponent, AccordionItemComponent, TemplateIdDirective, AccordionButtonDirective, ContainerComponent } from '@coreui/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { DeviceModalComponent } from './device-list/device-modal/device-modal.component';
 import { DeviceSequencesComponent } from './device-list/device-sequences/device-sequences.component';
 import { DeviceSequenceStepsComponent } from './device-list/device-sequence-steps/device-sequence-steps.component';
-import { AccordionComponent, AccordionItemComponent, TemplateIdDirective, AccordionButtonDirective } from '@coreui/angular';
+//import { AccordionComponent, AccordionItemComponent, TemplateIdDirective, AccordionButtonDirective,ContainerComponent } from '@coreui/angular';
 
 @NgModule({
   declarations: [
     BoardAdminComponent,
     BoardModeratorComponent,
     BoardUserComponent,
-    
+
 
 
     DeviceListComponent,
-        
-        DeviceModalComponent,
-        DeviceSequencesComponent,
-        DeviceSequenceStepsComponent,
+      DeviceModalComponent,
+      DeviceSequencesComponent,
+      DeviceSequenceStepsComponent,
   ],
   imports: [
     CommonModule,
@@ -48,22 +47,35 @@ import { AccordionComponent, AccordionItemComponent, TemplateIdDirective, Accord
     // --- Módulos que tus componentes movidos necesitan ---
     AvanzaModule, // Provee SmartDatatableComponent (asumiendo que está exportado de AvanzaModule)
 
-
-
+    // CoreUI modules
     SpinnerModule,
     ModalModule,
-    AccordionModule,
-    ModalComponent,
-    ModalHeaderComponent,
-    ModalTitleDirective,
-    ButtonCloseDirective,
-    ModalBodyComponent,
-    ModalFooterComponent,
-    ButtonDirective,
-    AccordionComponent,
-    AccordionItemComponent,
+
+    AccordionModule,    
+    AlertModule,
+    AvatarModule,
+    BadgeModule,
+    BreadcrumbModule,
+    ButtonGroupModule,
+    ButtonModule,
+    CardModule,
+    DropdownModule,
+    FooterModule,
+    FormModule,
+    GridModule,
+    HeaderModule,
+    ListGroupModule,
+    NavModule,
+    ProgressModule,
+    SidebarModule,
+    TabsModule,
+    ToastModule,
+    UtilitiesModule,
+
+    
     TemplateIdDirective,
-    AccordionButtonDirective
+    //AccordionButtonDirective
+
   ],
   // No necesitas exportar estos componentes si solo se usan dentro del PortalModule,
   // pero si algún otro módulo fuera de PortalModule los necesitara, se exportarían aquí.

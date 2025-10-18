@@ -20,8 +20,16 @@ export class DeviceService {
   }
 
   getScreenshot(serial: string): Observable<any> {
-  return this.http.get(`${API_URL}/screenshot/${serial}`);
-}
+    return this.http.get(`${API_URL}/screenshot/${serial}`);
+  }
+
+  stopCycle(serial: string): Observable<any> {
+    return this.http.post(`${API_URL}/stop-services/${serial}`, '');
+  }
+
+  startCycle(serial: string): Observable<any> {
+    return this.http.post(`${API_URL}/start-services/${serial}`, '');
+  }
 
 
 }

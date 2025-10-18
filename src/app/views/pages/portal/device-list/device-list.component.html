@@ -1,111 +1,54 @@
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h4>Dispositivos</h4>
-  <button class="btn btn-primary" (click)="openDeviceModal()">Agregar</button>
-</div>
+<c-container>
+  
+  <app-loading-overlay [isLoading]="isLoading" message="Cargando, por favor espera..."></app-loading-overlay>
 
-<smart-datatable
-  [columns]="columns"
-  [url]="url"
-  [actions]="actions"
-  (rowClick)="handleClick($event)"
-  [pageSize]="50">
-</smart-datatable>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Dispositivos</h4>
+    <button class="btn btn-primary" (click)="openDeviceModal()">Agregar</button>
+  </div>
 
-<!-- Modal -->
-<app-device-modal
-  *ngIf="isModalOpen "
-  [device]="selectedDevice"
-  (close)="closeDeviceModal()">
-</app-device-modal>
+  <smart-datatable [columns]="columns" [url]="url" [actions]="actions" (rowClick)="handleClick($event)" [pageSize]="50">
+  </smart-datatable>
 
-<!-- <div *ngIf="isModalOpen" class="modal fade show" style="display:block; background:rgba(0,0,0,0.5);">
-  <div class="modal-dialog">
-    <div class="modal-content">
+  <!-- Alert global -->
+  <div class="col-12 mt-3" *ngIf="alertMessage">
+    <c-alert (visibleChange)="onAlertVisibleChange($event)" [visible]="alertVisible" [color]="alertColor"
+      class="d-flex align-items-center" [dismissible]="true">
+      <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Mensaje:">
+        <use xlink:href="#exclamation-triangle-fill" />
+      </svg>
+      {{ alertMessage }}
+    </c-alert>
+  </div>
 
-      <div class="modal-header">
-        <h5 class="modal-title">
-          {{ selectedDevice.deviceId ? 'Editar Dispositivo' : 'Agregar Dispositivo' }}
-        </h5>
-        <button type="button" class="btn-close" (click)="closeDeviceModal()"></button>
-      </div>
+  <!-- Modal -->
+  <app-device-modal *ngIf="isModalOpen " [device]="selectedDevice" (close)="closeDeviceModal()">
+  </app-device-modal>
 
-      <form (ngSubmit)="saveDevice()" #deviceForm="ngForm">
-        <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label">Nombre</label>
-            <input
-              type="text"
-              class="form-control"
-              [(ngModel)]="selectedDevice.deviceName"
-              name="deviceName"
-              required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Descripción</label>
-            <input
-              type="text"
-              class="form-control"
-              [(ngModel)]="selectedDevice.description"
-              name="description">
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Num Serie</label>
-            <input
-              type="text"
-              class="form-control"
-              [(ngModel)]="selectedDevice.adbDevice"
-              name="serialNumber"
-              required>
-          </div>
+  <!-- Modal de screenshot -->
+  <div class="modal-backdrop fade show " *ngIf="showScreenshotModal"></div>
+  <div class="modal fade" tabindex="-1" [class.show]="showScreenshotModal"
+    [ngStyle]="{ display: showScreenshotModal ? 'block' : 'none', background: 'rgba(0,0,0,0.5)' }">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Captura del dispositivo</h5>
+          <button type="button" class="btn-close" (click)="closeScreenshotModal()"></button>
         </div>
+        <div class="modal-body text-center screenshot-modal">
+          <div *ngIf="isLoadingScreenshot" class="p-4">
+            <span class="spinner-border text-primary"></span>
+            <p class="mt-3">Cargando captura...</p>
+          </div>
 
+          <img *ngIf="!isLoadingScreenshot && screenshotSrc" [src]="screenshotSrc" alt="Captura de dispositivo"
+            class="img-fluid rounded shadow">
+        </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeDeviceModal()">Cancelar</button>
-          <button type="submit" class="btn btn-primary" [disabled]="isSaving || !deviceForm.valid">
-            {{ isSaving ? 'Guardando...' : 'Guardar' }}
-          </button>
+          <button class="btn btn-secondary" (click)="closeScreenshotModal()">Cerrar</button>
         </div>
-      </form>
-
-    </div>
-  </div>
-</div> -->
-
-<!-- Modal de screenshot -->
-<div class="modal-backdrop fade show " *ngIf="showScreenshotModal"></div>
-<div class="modal fade"
-     tabindex="-1"
-     [class.show]="showScreenshotModal"
-     [ngStyle]="{ display: showScreenshotModal ? 'block' : 'none', background: 'rgba(0,0,0,0.5)' }">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Captura del dispositivo</h5>
-        <button type="button" class="btn-close" (click)="closeScreenshotModal()"></button>
-      </div>
-      <div class="modal-body text-center screenshot-modal">
-        <div *ngIf="isLoadingScreenshot" class="p-4">
-          <span class="spinner-border text-primary"></span>
-          <p class="mt-3">Cargando captura...</p>
-        </div>
-
-        <img *ngIf="!isLoadingScreenshot && screenshotSrc"
-             [src]="screenshotSrc"
-             alt="Captura de dispositivo"
-             class="img-fluid rounded shadow">
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="closeScreenshotModal()">Cerrar</button>
       </div>
     </div>
   </div>
-</div>
 
-
-<!-- <c-modal size="lg" [visible]="true" >
-
-  <c-modal-header>
-    <h1 cModalTitle>un titulo alv</h1>
-    < <button cButtonClose></button> >
-  </c-modal-header>
-</c-modal> -->
+</c-container>

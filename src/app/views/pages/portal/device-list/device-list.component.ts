@@ -12,8 +12,12 @@ import { environment } from '../../../../../environments/environment';
 export class DeviceListComponent implements OnInit {
   @ViewChild(SmartDatatableComponent) table!: SmartDatatableComponent;
 
+  isLoading = false;
   isModalOpen = false;
   isSaving = false;
+  alertVisible = false;
+  alertMessage = '';
+  alertColor: 'success' | 'danger' | 'warning' | 'info' = 'info';
 
   selectedDevice: any = this.createEmptyDevice();
   //selectedDevice:any
@@ -35,8 +39,8 @@ export class DeviceListComponent implements OnInit {
     { icon: 'cil-pencil', label: '', tooltip: 'Editar', fn: (row: any) => this.openEditModal(row) },
     { icon: 'cil-trash', label: '', tooltip: 'Eliminar', color: 'danger', fn: (row: any) => this.delete(row) },
     { icon: 'cil-print', label: '', tooltip: 'ScreenShot', color: 'secondary', fn: (row: any) => this.openScreenshotModal(row) },
-    { icon: 'cil-factory-slash', label: '', tooltip: 'Detener Automatismo', color: 'secondary', fn: (row: any) => this.handleClick },
-    { icon: 'cil-factory', label: '', tooltip: 'Iniciar Automatizmo', color: 'secondary', fn: (row: any) => this.handleClick }
+    { icon: 'cil-factory-slash', label: '', tooltip: 'Detener Automatismo', color: 'secondary', fn: (row: any) => this.stopCycle(row) },
+    { icon: 'cil-factory', label: '', tooltip: 'Iniciar Automatizmo', color: 'secondary', fn: (row: any) => this.startCycle(row) }
     // { icon: 'cil-report-slash', label: '', tooltip: 'Apagar Servicios', color: 'secondary',fn:(row:any)=> this.handleClick },
     // { icon: 'cil-report-slash', label: '', tooltip: 'Apagar Servicios', color: 'secondary',fn:(row:any)=> this.handleClick },
   ];
@@ -61,7 +65,7 @@ export class DeviceListComponent implements OnInit {
   }
 
   openEditModal(row: any): void {
-    
+
     this.selectedDevice = row;
     console.log('selecteddev en openmodal', this.selectedDevice)
     this.isModalOpen = true;
@@ -75,7 +79,7 @@ export class DeviceListComponent implements OnInit {
   }
 
   saveDevice(): void {
-    this.isSaving = true;
+    this.isLoading = true;
     this.service.saveDevice(this.selectedDevice).subscribe({
       next: (res: any) => {
         console.log('Guardado correctamente:', res);
@@ -86,7 +90,7 @@ export class DeviceListComponent implements OnInit {
         console.error('Error al guardar:', err);
       },
       complete: () => {
-        this.isSaving = false;
+        this.isLoading = false;
       }
     });
   }
@@ -94,10 +98,18 @@ export class DeviceListComponent implements OnInit {
   delete(row: any): void {
     if (!confirm(`¿Seguro que deseas eliminar "${row.deviceName}"?`)) return;
     this.service.deleteDevice(row.deviceId).subscribe({
-      next: () => this.table.reload(),
-      error: err => console.error('Error al eliminar:', err)
+      next: (res: any) => {
+        this.showAlert(res?.message || 'Dispositivo eliminado correctamente.', 'success');
+        this.table.reload();
+      },
+      error: (err) => {
+        console.error('Error al eliminar:', err);
+        const msg = err?.error?.message || 'Error al eliminar el dispositivo.';
+        this.showAlert(msg, 'danger');
+      }
     });
   }
+
 
   handleClick(event: any) {
     console.log('click row', event);
@@ -135,5 +147,59 @@ export class DeviceListComponent implements OnInit {
   closeScreenshotModal(): void {
     this.showScreenshotModal = false;
     this.screenshotSrc = null;
+  }
+
+  stopCycle(row: any): void {
+    if (!confirm(`¿Seguro que deseas detener el ciclo de automatización "${row.deviceName}"?`)) return;
+    this.isLoading = true;
+    this.service.stopCycle(row.adbDevice).subscribe({
+      next: (res: any) => {
+        this.showAlert(res.message || 'Ciclo detenido correctamente.', 'success');
+        this.table.reload();
+      },
+      error: (err) => {
+        console.error('Error al detener:', err);
+        const msg = err?.error?.message || 'Error al detener el ciclo.';
+        this.showAlert(msg, 'danger');
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
+  }
+
+  startCycle(row: any): void {
+    this.isLoading = true;
+    this.service.startCycle(row.adbDevice).subscribe({
+      next: (res: any) => {
+        this.showAlert(res.message || 'Ciclo iniciado correctamente.', 'success');
+        this.table.reload();
+      },
+      error: (err) => {
+        console.error('Error al iniciar:', err);
+        const msg = err?.error?.message || 'Error al iniciar el ciclo.';
+        this.showAlert(msg, 'danger');
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
+  }
+
+
+
+
+  showAlert(message: string, color: 'success' | 'danger' | 'warning' | 'info' = 'info') {
+    this.alertMessage = message;
+    this.alertColor = color;
+    this.alertVisible = true;
+
+    // Ocultar automáticamente después de unos segundos
+    setTimeout(() => this.alertVisible = false, 4000);
+  }
+
+  onAlertVisibleChange(visible: boolean) {
+    this.alertVisible = visible;
+    if (!visible) this.alertMessage = '';
   }
 }

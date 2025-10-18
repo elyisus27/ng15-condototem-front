@@ -9,7 +9,8 @@ import { HttpClientModule } from '@angular/common/http';
 
 
 import { SmartDatatableComponent } from './components/smart-datatable/smart-datatable.component';
-import { ButtonModule } from '@coreui/angular';
+import { ButtonModule, SpinnerModule } from '@coreui/angular';
+import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { ButtonModule } from '@coreui/angular';
         CommonModule,
         IconModule,
         ButtonModule,
+        SpinnerModule,
 
 
         HttpClientModule,
@@ -28,6 +30,7 @@ import { ButtonModule } from '@coreui/angular';
         //AvdatatableComponent,
 
         SmartDatatableComponent,
+        LoadingOverlayComponent
 
 
     ],
@@ -36,6 +39,7 @@ import { ButtonModule } from '@coreui/angular';
 
         //AvdatatableComponent,
         SmartDatatableComponent,
+        LoadingOverlayComponent,
 
 
         IconModule,
