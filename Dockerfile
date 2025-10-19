@@ -1,7 +1,3 @@
-#Forma personalizada. hacer 
-#ng build
-#docker build . -t jesus2787/ng15-condovive-totem-front:latest
-
 FROM nginx:alpine
 # Elimina la configuración por defecto de Nginx
 RUN rm /etc/nginx/conf.d/default.conf

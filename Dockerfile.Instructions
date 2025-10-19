@@ -1,0 +1,24 @@
+#Revisar environment.ts y nginx.conf. revisar nombre del servicio a usar en .yaml en produccion.
+#ng build
+#docker build . -t jesus2787/ng15-condovivetotem-front:latest  --no-cache
+
+#Testearlo
+#docker compose up -d #aun no tengo .yaml aqui para testear local
+
+
+#PROCESO DOCKER BUILD MULTIPLATAFORMA (de pcx86 a orange armv7)
+#Activa el builder multiplataforma:
+docker buildx create --use
+#Luego construye para ARMv7 (como tu Orange Pi):
+docker buildx build --platform linux/arm/v7 -t jesus2787/ng15-condovivetotem-front:latest .
+#Si quieres probarlo en tu máquina sin subirlo a Docker Hub, agrégale --load:
+docker buildx build --platform linux/arm/v7 -t ng15-condovivetotem-front:latest --load .
+docker images
+docker save ng15-condovivetotem-front -o ng15-condovivetotem-front.tar
+docker load -i ng15-condovivetotem-front.tar
+#exportar directo a .tar
+docker buildx build --platform linux/arm/v7 -t ng15-condovivetotem-front:latest --output type=docker,dest=ng15-condovivetotem-front.tar .
+#subir directo a docker hub
+docker buildx build --platform linux/arm/v7 -t jesus2787/ng15-condovivetotem-front:latest --push .
+
+
