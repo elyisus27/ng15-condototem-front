@@ -24,6 +24,8 @@ export class DeviceModalComponent {
       name: [''],
       description: [''],
       adbDevice: [''],
+      gpioPin: [''],
+      msPulse: [''],
 
     });
   }
@@ -38,7 +40,9 @@ export class DeviceModalComponent {
       this.deviceForm.patchValue({
         name: this.device.deviceName, // Mapeo: device.deviceName -> FormControl 'name'
         description: this.device.description,
-        adbDevice: this.device.adbDevice
+        adbDevice: this.device.adbDevice,
+        gpioPin:this.device.gpioPin,
+        msPulse:this.device.msPulse
       });
       this.currentSequences = this.device.sequences ? [...this.device.sequences] : [];
     }
@@ -65,6 +69,8 @@ export class DeviceModalComponent {
       deviceName: formValues.name,
       description: formValues.description,
       adbDevice: formValues.adbDevice,
+      gpioPin:formValues.gpioPin,
+      msPulse:formValues.msPulse,
       // 3. Añadimos el arreglo de secuencias anidadas
       sequences: this.currentSequences
     };

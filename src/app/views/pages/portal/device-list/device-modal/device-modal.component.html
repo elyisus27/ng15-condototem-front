@@ -7,22 +7,46 @@
   </c-modal-header>
 
   <c-modal-body>
-    <form [formGroup]="deviceForm">
-      <div class="mb-3">
-        <label class="form-label">Nombre del dispositivo</label>
-        <input formControlName="name" class="form-control" />
-      </div>
 
-      <div class="mb-3">
-        <label class="form-label">Descripción</label>
-        <textarea formControlName="description" class="form-control"></textarea>
-      </div>
+    <form [formGroup]="deviceForm" cForm class="p-2">
+      <c-row>
+        <!-- Columna izquierda -->
+        <c-col md="6">
+          <div class="mb-3">
+            <label class="form-label">Nombre del dispositivo</label>
+            <input cFormControl formControlName="name" type="text" class="form-control" placeholder="Ej. Bomba 1" />
+          </div>
 
-      <div class="mb-3">
-        <label class="form-label">Num Serie</label>
-        <input type="text" formControlName="adbDevice" class="form-control" required>
-      </div>
+          <div class="mb-3">
+            <label class="form-label">Descripción</label>
+            <textarea cFormControl formControlName="description" rows="3" class="form-control"
+              placeholder="Descripción del dispositivo"></textarea>
+          </div>
+        </c-col>
+
+        <!-- Columna derecha -->
+        <c-col md="6">
+          <div class="mb-3">
+            <label class="form-label">Número de serie</label>
+            <input cFormControl formControlName="adbDevice" type="text" class="form-control" placeholder="Ej. ADB-1234"
+              required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">GPIO Pin</label>
+            <input cFormControl formControlName="gpioPin" type="number" class="form-control" min="0"
+              placeholder="Ej. 11" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Tiempo de pulso (ms)</label>
+            <input cFormControl formControlName="msPulse" type="number" class="form-control" min="0"
+              placeholder="Ej. 200" />
+          </div>
+        </c-col>
+      </c-row>
     </form>
+
 
     <hr>
 

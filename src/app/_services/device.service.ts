@@ -23,6 +23,9 @@ export class DeviceService {
     return this.http.get(`${API_URL}/screenshot/${serial}`);
   }
 
+  stopAllApps(serial: string) {
+    return this.http.post(`${API_URL}/close-all-apps/${serial}`, '');
+  }
   stopCycle(serial: string): Observable<any> {
     return this.http.post(`${API_URL}/stop-services/${serial}`, '');
   }

@@ -39,9 +39,9 @@ export class DeviceListComponent implements OnInit {
     { icon: 'cil-pencil', label: '', tooltip: 'Editar', fn: (row: any) => this.openEditModal(row) },
     { icon: 'cil-trash', label: '', tooltip: 'Eliminar', color: 'danger', fn: (row: any) => this.delete(row) },
     { icon: 'cil-print', label: '', tooltip: 'ScreenShot', color: 'secondary', fn: (row: any) => this.openScreenshotModal(row) },
+    { icon: 'cil-report-slash', label: '', tooltip: 'Cerrar todas apps', color: 'secondary',fn:(row:any)=> this.stopAllApps(row) },
     { icon: 'cil-factory-slash', label: '', tooltip: 'Detener Automatismo', color: 'secondary', fn: (row: any) => this.stopCycle(row) },
     { icon: 'cil-factory', label: '', tooltip: 'Iniciar Automatizmo', color: 'secondary', fn: (row: any) => this.startCycle(row) }
-    // { icon: 'cil-report-slash', label: '', tooltip: 'Apagar Servicios', color: 'secondary',fn:(row:any)=> this.handleClick },
     // { icon: 'cil-report-slash', label: '', tooltip: 'Apagar Servicios', color: 'secondary',fn:(row:any)=> this.handleClick },
   ];
 
@@ -55,7 +55,7 @@ export class DeviceListComponent implements OnInit {
       deviceName: '',
       description: '',
       adbDevice: '',
-      sequences: [{ name: "GoToCamera" }, { name: "Aceptar" }, { name: "Denegar" }]
+      sequences: [{ name: "GoToCamera" }, { name: "Aceptar Visita" }, { name: "Denegar Visita" }]
     };
   }
 
@@ -147,6 +147,26 @@ export class DeviceListComponent implements OnInit {
   closeScreenshotModal(): void {
     this.showScreenshotModal = false;
     this.screenshotSrc = null;
+  }
+
+
+   stopAllApps(row: any): void {
+    if (!confirm(`¿Seguro que deseas cerrar todas las apps"${row.deviceName}"?`)) return;
+    this.isLoading = true;
+    this.service.stopAllApps(row.adbDevice).subscribe({
+      next: (res: any) => {
+        this.showAlert(res.message || 'Aplicaciones detenidas', 'success');
+        this.table.reload();
+      },
+      error: (err) => {
+        console.error('Error al detener:', err);
+        const msg = err?.error?.message || 'Error al detener el ciclo.';
+        this.showAlert(msg, 'danger');
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
   }
 
   stopCycle(row: any): void {
