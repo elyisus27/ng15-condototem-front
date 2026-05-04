@@ -4,6 +4,8 @@ import { BehaviorSubject, of } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
 import { DataTableColumn, DataTableResponse, DataTableAction } from './smart-datatable.interfaces';
 
+type SortDirection = 'asc' | 'desc' | '';
+
 @Component({
   selector: 'smart-datatable',
   templateUrl: './smart-datatable.component.html',
@@ -18,6 +20,12 @@ export class SmartDatatableComponent implements OnInit {
   @Input() remote = true;
   @Input() pageSizeOptions: number[] = [10, 25, 50];
   @Input() pageSize = 10;
+  @Input() sortEnabled = true;
+  @Input() remoteSort = false;
+  @Input() sortFieldParam = 'sortField';
+  @Input() sortDirectionParam = 'sortDirection';
+  @Input() sortColumn = '';
+  @Input() sortDirection: SortDirection = '';
 
   @Output() rowClick = new EventEmitter<any>();
   @Output() rowDblClick = new EventEmitter<any>();
@@ -37,7 +45,7 @@ export class SmartDatatableComponent implements OnInit {
   fetchData(): void {
     this.loading$.next(true);
 
-    const params = new HttpParams()
+    let params = new HttpParams()
       .set('limit', this.pageSize.toString())
       .set('page', this.currentPage.toString())
       .set('searchtxt', this.filters.searchtxt || '')
@@ -46,10 +54,17 @@ export class SmartDatatableComponent implements OnInit {
       //.set('showInactives', this.filters.showInactives ? 'true' : 'false');
       .set('showInactives', 'true');
 
+    if (this.remoteSort && this.sortColumn && this.sortDirection) {
+      params = params
+        .set(this.sortFieldParam, this.sortColumn)
+        .set(this.sortDirectionParam, this.sortDirection);
+    }
+
     this.http.get<any>(this.url, { params }).pipe(
       
       tap(res => {
-        this.data$.next(res.data.items || []);
+        const items = res.data.items || [];
+        this.data$.next(this.remoteSort ? items : this.sortRows(items));
         this.totalItems = res.data.totalItems || 0;
       }),
       catchError(() => {
@@ -85,6 +100,73 @@ export class SmartDatatableComponent implements OnInit {
     this.currentPage = 1;
     this.fetchData();
   }
+
+  onSort(column: DataTableColumn): void {
+    if (!this.isSortable(column)) return;
+
+    const nextColumn = column.sortField || column.name;
+
+    if (this.sortColumn !== nextColumn) {
+      this.sortColumn = nextColumn;
+      this.sortDirection = 'asc';
+    } else if (this.sortDirection === 'asc') {
+      this.sortDirection = 'desc';
+    } else if (this.sortDirection === 'desc') {
+      this.sortDirection = '';
+      this.sortColumn = '';
+    } else {
+      this.sortDirection = 'asc';
+    }
+
+    this.currentPage = 1;
+
+    if (this.remoteSort) {
+      this.fetchData();
+      return;
+    }
+
+    this.data$.next(this.sortRows(this.data$.value));
+  }
+
+  isSortable(column: DataTableColumn): boolean {
+    return this.sortEnabled && column.sortable !== false;
+  }
+
+  isSorted(column: DataTableColumn): boolean {
+    return this.sortColumn === (column.sortField || column.name) && !!this.sortDirection;
+  }
+
+  private sortRows(rows: any[]): any[] {
+    if (!this.sortColumn || !this.sortDirection) return rows;
+
+    return [...rows].sort((a, b) => {
+      const aValue = this.getValue(a, this.sortColumn);
+      const bValue = this.getValue(b, this.sortColumn);
+      const comparison = this.compareValues(aValue, bValue);
+
+      return this.sortDirection === 'asc' ? comparison : comparison * -1;
+    });
+  }
+
+  private compareValues(aValue: any, bValue: any): number {
+    if (aValue == null && bValue == null) return 0;
+    if (aValue == null) return -1;
+    if (bValue == null) return 1;
+
+    if (typeof aValue === 'number' && typeof bValue === 'number') {
+      return aValue - bValue;
+    }
+
+    return String(aValue).localeCompare(String(bValue), undefined, {
+      numeric: true,
+      sensitivity: 'base'
+    });
+  }
+
+  private getValue(row: any, field: string): any {
+    return field.split('.').reduce((value, key) => value?.[key], row);
+  }
+
   actionClicked(action: DataTableAction, row: any) {
     if (action.fn) action.fn(row);
   }

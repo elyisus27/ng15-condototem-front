@@ -3,6 +3,8 @@ export interface DataTableColumn {
   title: string;
   width?: string;
   align?: string;
+  sortable?: boolean;
+  sortField?: string;
   template?: (row: any) => string;
 }
 

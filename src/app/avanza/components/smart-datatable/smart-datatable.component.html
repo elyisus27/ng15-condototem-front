@@ -2,7 +2,7 @@
   <div class="card-header d-flex justify-content-between align-items-center">
     <span>Resultados</span>
     <div>
-      <select (change)="onPageSizeChange($event)">
+      <select [value]="pageSize" (change)="onPageSizeChange($event)">
         <option *ngFor="let size of pageSizeOptions" [value]="size">{{size}}</option>
       </select>
     </div>
@@ -12,7 +12,30 @@
     <table class="table table-hover table-bordered">
       <thead>
         <tr>
-          <th *ngFor="let col of columns" [style.width]="col.width">{{ col.title }}</th>
+          <th
+            *ngFor="let col of columns"
+            [style.width]="col.width"
+            [class.sortable]="isSortable(col)"
+            [class.sorted]="isSorted(col)"
+            [attr.aria-sort]="isSorted(col) ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'"
+          >
+            <button
+              *ngIf="isSortable(col); else plainHeader"
+              type="button"
+              class="sort-button"
+              (click)="onSort(col)"
+            >
+              <span>{{ col.title }}</span>
+              <span class="sort-indicator" aria-hidden="true">
+                <ng-container *ngIf="isSorted(col); else unsortedIndicator">
+                  <span *ngIf="sortDirection === 'asc'">&uarr;</span>
+                  <span *ngIf="sortDirection === 'desc'">&darr;</span>
+                </ng-container>
+                <ng-template #unsortedIndicator>&#8597;</ng-template>
+              </span>
+            </button>
+            <ng-template #plainHeader>{{ col.title }}</ng-template>
+          </th>
           <th *ngIf="actions.length > 0">Acciones</th>
         </tr>
       </thead>

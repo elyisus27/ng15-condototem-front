@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { BoardModeratorComponent } from './board-moderator/board-moderator.component';
 
 import { DeviceListComponent } from './device-list/device-list.component';
+import { CrossingLogListComponent } from './crossing-log-list/crossing-log-list.component';
 import { BoardAdminComponent } from './board-admin/board-admin.component';
 import { BoardUserComponent } from './board-user/board-user.component';
 
@@ -31,12 +32,11 @@ import { DeviceSequenceStepsComponent } from './device-list/device-sequence-step
     BoardModeratorComponent,
     BoardUserComponent,
 
-
-
     DeviceListComponent,
-      DeviceModalComponent,
-      DeviceSequencesComponent,
-      DeviceSequenceStepsComponent,
+    CrossingLogListComponent,
+    DeviceModalComponent,
+    DeviceSequencesComponent,
+    DeviceSequenceStepsComponent,
   ],
   imports: [
     CommonModule,

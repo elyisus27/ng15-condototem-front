@@ -2,6 +2,7 @@
 //import { AvdatatableComponent } from '../../../avanza/components/avdatatable/avdatatable.component';
 
 import { DeviceListComponent } from './device-list/device-list.component';
+import { CrossingLogListComponent } from './crossing-log-list/crossing-log-list.component';
 
 
 
@@ -16,6 +17,10 @@ export const ROUTES = [{
         }, {
             path: 'devices',
             component: DeviceListComponent,
+        },
+        {
+            path: 'crossing-log-list',
+            component: CrossingLogListComponent,
         },
 
     ]

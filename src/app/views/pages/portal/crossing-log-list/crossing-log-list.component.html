@@ -1,0 +1,20 @@
+<c-container>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Bitacora de cruces en TOTEM</h4>
+  </div>
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <span>REGISTROS DEL</span>
+
+    <input class="form-control form-control-sm date-input" type="date" [(ngModel)]="dt1" (change)="onDateChange()" />
+
+    <span>AL</span>
+
+    <input class="form-control form-control-sm date-input" type="date" [(ngModel)]="dt2" (change)="onDateChange()" />
+
+    <input class="form-control form-control-sm search-input ms-auto" type="text" [(ngModel)]="searchtxt"
+      placeholder="Buscar..." (keyup)="onSearch()" />
+
+  </div>
+  <smart-datatable [columns]="columns" [url]="url" [filters]="filters" (rowClick)="handleClick($event)" [pageSize]="10">
+  </smart-datatable>
+</c-container>
